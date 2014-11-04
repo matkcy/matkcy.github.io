@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+<title> The LIBOR Market Model </title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+</head>
+<body>
+    
+    
+    
+<h1>The Underlying Plain Vanilla Instruments</h1>
+
+
+
+<h2> The Pricing of FRAs</h2>
+
+
+<p> The most basic instrument is a forward-rate agreement (FRA). By entering a FRA at time $t$, two parties agree to  exchange at time \( T+\tau\) an amount of money proportional to the difference between a strike \(K\) and the LIBOR rate \( L(T,T+\tau)\) which resets at time \(T\) for payment at time \(T+\tau\). That is, the payoff to the long side of a FRA at time \(T+\tau\) is given by
+
+
+$$ {\bf FRA}_{T+\tau} = NP(L(T,T+\tau)-K)\tau.$$
+
+Here, the accrual period \(\tau\) is typically three or six months, \(NP\) is the proportionality factor known as the Notional Principal, and the strike \(K\) is agreed upon at the time \(t\) of initiation.
+
+Since the LIBOR rate \(L(T,T+\tau)\) is known at time \(T\), the value of a FRA at time \(T\) is
+
+$$ {\bf FRA}_{T} = NP \frac{(L(T,T+\tau)-K)\tau}{1+L(T,T+\tau)\tau}. $$
+</p>
+
+
+
+<p>
+<li> The term \(L(T,T+\tau)\tau\) is called the floating leg of the FRA.
+    
+<li> The term \(K\tau\) is called the fixed leg of the FRA.
+</p>
+
+
+What is the value of the FRA at any earlier time \(t\) prior to the reset time \(T\)?
+
+
+To answer this question, we introduce the concept of forward rate \(f(t,T,T+\tau)\).
+
+
+
+<p> The forward rate at time \(t \le T \) is defined to be the strike that gives zero value to the corresponding FRA. In other words, it costs nothing to enter into a FRA initiated at time \(t\) when the strike is set to be \(f(t,T,T+\tau)\).
+
+In particular, if \(t=T\) and the strike of a FRA is set to be the prevailing forward rate \(f(T,T,T+\tau)\), then the value of the FRA at time \(T\) must be \(0\). Thus,
+$$ 0 = {\bf FRA}_{T} = NP \frac{(L(T,T+\tau)-f(T,T,T+\tau))\tau}{1+L(T,T+\tau)\tau} $$
+which implies that
+$$ f(T,T,T+\tau) = L(T,T+\tau). $$
+
+</p>
+
+<h3> Static replicating strategy </h3>
+
+
+<p> Consider the portfolio \(\Pi_{t}\) made up of a long position in the bond maturing at time \(T\) and a shot position in the bond maturing at time \(T+\tau\).  Clearly,
+$$ \Pi_{t} = P(t,T)-P(t,T+\tau), $$
+$$ \Pi_{T+\tau} = (1+L(T,T,T+\tau)\tau) - 1 = L(T,T,T+\tau)\tau. $$
+
+That is, the portfolio \(\Pi_{t}\) replicates the floating leg of a FRA.
+</p>
+
+
+</p>
+
+Consider another portfolio \(\Pi^{*}_{t}\) made up of a long position in \(K \tau \) units of the bond maturing at time \(T+\tau\). Clearly,
+$$\Pi^{*}_{t} = K\tau P(t,T+\tau),$$
+$$\Pi^{*}_{T} = K\tau. $$
+
+That is, the portfolio \(\Pi^{*}_{t}\) replicates the fixed leg of a FRA.
+
+
+
+</p>
+
+
+
+Hence the portfolio $NP \times (\Pi_{t}-\Pi^{*}_{t}))$ will replicate the FRA with strike \(K\) and a notional pricinpal of \(NP\). In the absence of arbitrage, we have
+\begin{eqnarray}
+{\bf FRA}_{t} =  NP \times \left((P(t,T)-P(t,T+\tau)) - K\tau P(t,T+\tau)\right).
+\end{eqnarray}
+
+
+The replicating portfolio is static, since it does not require any readjustment of positions throughout the life of the portfolio.
+
+
+
+<p class=theorem><b>Theorem </b>
+The forward rate at time $t$ is
+$$ f(t,T,T+\tau) = \frac{\frac{P(t,T)}{P(t,T+\tau)} - 1}{\tau}$$
+</p>
+
+$Proof:$ Setting the strike price $K$ to be the forward rate at time $t$ of initiation of the FRA, we must have ${\bf FRA}_{t} = 0$.
+
+
+
+
+$$(P(t,T)-P(t,T+\tau)) - f(t,T,T+\tau) \tau P(t,T+\tau) = 0.$$
+
+The result follows by rearranging the terms in the preceding equation.
+
+
+
+</body>
+</html>
