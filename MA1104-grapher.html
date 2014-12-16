@@ -1,7 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
+
 <link rel="stylesheet" type="text/css" href="text.css" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
 
 
 <head>
@@ -10,17 +11,16 @@
     <style>
         body {font: 10pt arial;}
     </style>
+    
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width" />
 
-     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript" src="../graph3d-1.4/graph3d.js"></script>
 
 
-
-</head>
-
-<body>
     
-<BR>
+
 
 <font size = "6">
     <p>
@@ -120,15 +120,22 @@ function drawVisualization() {
 
 <div id="info"></div>
 
-<BR>
+
+
+
 
 Created by Dr. Ku Cheng Yeaw using <a href="http://almende.github.io/chap-links-library/"> CHAP Links Library</a>
 
 
+</head>
+
+<body onresize="graph.redraw();">
+    <div id="mygraph"></div>
 </body>
+
 </html>
 
 
-<div id="mygraph"></div>
+
 
 
