@@ -88,14 +88,17 @@ function drawVisualization() {
     
     // specify options
     var options = {
-        width:  "600px",
-        height: "600px",
+        width:  "100%",
+        height: "100%",
         style: "surface",
         showPerspective: true,
         showGrid: true,
         showShadow: false,
         keepAspectRatio: true,
-        verticalRatio: 1
+        verticalRatio: 0.5
+        backgroundColor: {
+            strokeWidth: 0
+        }
     };
     
     // Instantiate our graph object.
@@ -103,28 +106,8 @@ function drawVisualization() {
     
     // Draw our graph with the created data and options
     graph.draw(data, options);
-    
-    
-    
-    // document.write("Your function is: ");
-    
-    //document.getElementById("info").innerHTML = document.getElementById("fun").value;
-    
-    //document.getElementById("info").innerHTML = "
-    
- 
-    
 }
 </script>
-
-
-
-
-
-
-
-
-
 </head>
 
 <body onresize="graph.redraw();">
