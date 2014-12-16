@@ -27,17 +27,14 @@
 
 
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    
     <script type="text/javascript" src="../graph3d-1.4/graph3d.js"></script>
 
 
     
 
 
-    <p>
-        Function f(x,y) = <input  type="text" name="input" id="fun" value="x+y" style="width:1000px;">
-            <input type="submit" value="Submit"  onclick="custom(), drawVisualization()">
-               
-    </p>
+
 
 <script type="text/javascript">
     var data = null;
@@ -126,19 +123,28 @@ function drawVisualization() {
 
 
 
-<div id="info"></div>
-
-
-
-
-
-Created by Dr. Ku Cheng Yeaw using <a href="http://almende.github.io/chap-links-library/"> CHAP Links Library</a>
 
 
 </head>
 
 <body onresize="graph.redraw();">
     <div id="mygraph"></div>
+    
+    
+    <p>
+    Function f(x,y) = <input  type="text" name="input" id="fun" value="x+y" style="width:1000px;">
+        <input type="submit" value="Submit"  onclick="custom(), drawVisualization()">
+            
+    </p>
+    
+    
+    
+    
+    
+    
+    Created by Dr. Ku Cheng Yeaw using <a href="http://almende.github.io/chap-links-library/"> CHAP Links Library</a>
+    
+
 </body>
 
 </html>
