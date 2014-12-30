@@ -1,0 +1,26 @@
+body 
+{
+	font-family: Monospace;
+	/*font-weight: bold;*/
+	font-size: 12px;
+	/*background-color: #ccccff;*/
+
+        background-color: #FBFBEF;
+	margin: 10px;
+	overflow: hidden;
+	/*overflow: scroll;*/
+	cursor: move;
+}
+
+
+input[type=text]
+{
+    /* your styles here, You can just increase its font size below*/
+    font-size: 12px;
+    /*font-weight: bold;*/
+    font-family: Monospace;
+    
+    background-color: white;
+}
+
+
