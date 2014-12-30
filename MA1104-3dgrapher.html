@@ -1,0 +1,250 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<link rel="stylesheet" type="text/css" href="text.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<head>
+    <title>3D Grapher</title>
+
+
+        <style type="text/css">
+        #maincontainer
+        {
+            top:0px;
+            padding-top:0;
+            margin:auto; position:relative;
+            width:950px;
+            height:100%;
+        }
+    </style>
+    
+
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="../graph3d-1.4/graph3d.js"></script>
+
+
+</head>
+
+<body>
+    
+
+
+    <p>
+         f(x,y)= <input type="text" name="input" id="fun" value="Math.cos(x)*Math.sin(y)" style="width:430px;">
+            
+                
+        <br>
+        <br>
+        
+        Domain:
+        
+        <br>
+        <input type="text" name="input" id="x_lower" value="-5" style="width:100px;"> <= x <= <input type="text" name="input" id="x_upper" value="5" style="width:100px;">
+            
+        <br>
+        <input type="text" name="input" id="y_lower" value="-5" style="width:100px;"> <= y <= <input type="text" name="input" id="y_upper" value="5" style="width:100px;">
+            
+        <br>
+        <br>
+        
+           <input type="submit" value="Draw" style="font-family: serif; font-size:30px"  onclick="custom(), x_lower(), x_upper(), y_lower(), y_upper(), drawVisualization()">
+               
+               
+        <br>
+        <br>
+      
+      <label>Choose example function f(x,y): </label>
+            
+            <BR>
+            <BR>
+            
+            <select id="example" onChange="fxy(), custom(), drawVisualization()">
+                <option value="0" selected="selected">Choose</option>
+                
+                <option value="x*x+y*y"> Elliptic Paraboloid
+                </option>
+                
+                <option value="x*x-y*y"> Hyperbolic Paraboloid
+                </option>
+                
+
+
+
+
+                
+                <option value="Math.sqrt(x*x+y*y)+3*Math.cos(Math.sqrt(x*x+y*y))+5" >sqrt(x*x+y*y)+3*cos(sqrt(x*x+y*y))+5</option>
+                <option value="1/(Math.sin(Math.abs(x)+x)-Math.cos(Math.abs(y)+y))">1/(sin(abs(x)+x)-cos(abs(y)+y))</option>
+                
+                <option value="Math.sin(5.5*x)*Math.cos(5*y)+x*x+1">
+                    sin(5.5*x)*cos(5*y)+x*x+1</option>
+                
+                <option value="5000-140*(x*x+y*y)+Math.pow(x*x+y*y,2)">
+                   5000-140*(x*x+y*y)+(x*x+y*y)^2 </option>
+                
+                <option value="Math.sin(x*x+y*y)/(Math.abs(x*y)+1)">
+                 sin(x*x+y*y)/(abs(x*y)+1)</option>
+                
+                <option value="x*x+y*y+x*y*Math.sin(x+y) ">
+               x*x+y*y+x*y*sin(x+y) </option>
+                
+                <option value="Math.sqrt(x*x+y*y)+3*Math.tan(Math.sqrt(x*x+y*y))+10">
+                sqrt(x*x+y*y)+3*tan(sqrt(x*x+y*y))+10</option>
+                
+                <option value="Math.sqrt(x*x+y*y)+3*Math.sin(Math.sqrt(x*x+y*y))+5">
+                 sqrt(x*x+y*y)+3*sin(sqrt(x*x+y*y))+5</option>
+                
+                <option value="Math.sqrt(Math.abs(Math.cos(3*x)))*Math.cos(100*y)+1.5*Math.sqrt(Math.abs(x))+0.8">
+                sqrt(abs(cos(3*x)))*cos(100*y)+1.5*sqrt(abs(x))+0.8</option>
+                
+                <option value="">
+                </option>
+                <option value="">
+                </option>
+                
+                <option value="">
+                </option>
+                <option value="">
+                </option>
+                
+                
+                
+                
+                <!--<option value="10">Heart</option>-->
+            </select>
+            
+    </p>
+
+
+<script type="text/javascript">
+    var data = null;
+    var graph = null;
+    
+    google.load("visualization", "1");
+    
+    // Set callback to run when API is loaded
+    google.setOnLoadCallback(drawVisualization);
+    
+    
+    function fxy(){
+        document.getElementById("fun").value = document.getElementById("example").value
+    }
+
+    function custom(){
+        var myfun = document.getElementById("fun").value;
+    
+        function func(x,y){
+            return eval(myfun);
+            
+        
+        }
+        
+        return func;
+         
+    }
+
+
+
+
+
+    function x_lower(){
+
+        return eval(document.getElementById("x_lower").value);
+
+    }
+    function x_upper(){
+    
+        return eval(document.getElementById("x_upper").value);
+    
+    }
+
+    function y_lower(){
+    
+        return eval(document.getElementById("y_lower").value);
+    
+    }
+    function y_upper(){
+    
+        return eval(document.getElementById("y_upper").value);
+    
+    }
+
+
+// Called when the Visualization API is loaded.
+function drawVisualization() {
+    
+   
+    // Create and populate a data table.
+    data = new google.visualization.DataTable();
+    data.addColumn('number', 'x');
+    data.addColumn('number', 'y');
+    data.addColumn('number', 'z');
+    
+    // create some nice looking data with sin/cos
+    var steps = 20;  // number of datapoints will be steps*steps
+    
+    var x_step = (x_upper()-x_lower())/steps;
+    
+    var y_step = (y_upper()-y_lower())/steps;
+
+    
+    for (var x = x_lower(); x < x_upper(); x+=x_step) {
+        for (var y = y_lower(); y < y_upper(); y+=y_step) {
+            var value = custom()(x,y);
+            data.addRow([x, y, value]);
+        }
+    }
+    
+    // specify options
+    var options = {
+        width:  "400px",
+        height: "380px",
+        style: "surface",
+        showPerspective: true,
+        showGrid: true,
+        showShadow: false,
+        keepAspectRatio: true,
+        verticalRatio: 1
+    };
+    
+    // Instantiate our graph object.
+    graph = new links.Graph3d(document.getElementById('mygraph'));
+    
+    // Draw our graph with the created data and options
+    graph.draw(data, options);
+}
+</script>
+
+
+
+
+
+
+
+<div id="maincontainer"></div>
+
+<BR>
+
+
+
+<p class="two">
+Click and drag to move the graph, scroll to zoom the graph.
+
+<BR>
+
+<BR>
+
+Created by Dr. Ku Cheng Yeaw using the CHAP Links Library.
+
+<BR>
+
+
+</p>
+
+</body>
+</html>
+
+
+<div id="mygraph"></div>
+
+

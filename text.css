@@ -1,8 +1,54 @@
 body{ background-color: #FBFBEF;} 
-p { font-size:120%; font-family: serif} 
+p { font-size:12px; font-family: Monospace;
+
+position: absolute;
+    left: 450px;
+    top: 80px;
+    }
+    
+    
+p.two { font-size:12px; font-family: Monospace;
+
+position: absolute;
+    left: 10px;
+    top: 420px;
+    }
+    
+
 h3{ color: gray; }
 p.theorem{color: blue; padding-top: 0px;
     padding-right: 100px;
     padding-bottom: 13px;
     padding-left: 100px; }
 
+/*input[type=submit]
+{
+    /* your styles here, You can just increase its font size below*/
+    
+    /*font-size: 15px;*/
+    
+    /*font-weight: bold;*/
+    
+    font-family: Monospace;
+    
+    background-color: #E8E8E8 ;
+
+    padding:5px 15px;
+    
+    cursor:pointer;
+    -webkit-border-radius: 0px;
+    border-radius: 15px;
+
+}*/
+
+
+
+input[type=text]
+{
+    /* your styles here, You can just increase its font size below*/
+    font-size: 12px;
+    /*font-weight: bold;*/
+    font-family: Monospace;
+    
+    background-color: white;
+}
