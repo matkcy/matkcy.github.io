@@ -108,7 +108,7 @@ function refresh(){
 	var VIEW_ANGLE = 55, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 30000;
 	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 	scene.add(camera);
-	camera.position.set(20,20,60);
+	camera.position.set(30,5,60);
 	camera.lookAt(scene.position);	
 	// RENDERER
 	if ( Detector.webgl )
