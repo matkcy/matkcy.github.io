@@ -35,12 +35,8 @@
 <script src="Three.js/js/MarchingCubesData.js"></script>
 <div id="ThreeJS" style="position: absolute; left:0px; top:90px; z-index:-1"></div>
 
-<BR>
 
-
-<p> For optimal viewing experience, use Chrome or Firefox web browser. Created by Dr. Ku Cheng Yeaw using Three.js.</p>
-
-
+<p> For optimal viewing experience, use Chrome or Firefox web browser. Created by Dr. Ku Cheng Yeaw using Three.js.
 </p>
 
 <p>
@@ -105,11 +101,15 @@ function refresh(){
     //var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = 500;
     
     
-	var VIEW_ANGLE = 55, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 30000;
+	var VIEW_ANGLE = 55, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
 	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 	scene.add(camera);
-	camera.position.set(30,5,60);
-	camera.lookAt(scene.position);	
+    
+    camera.up = new THREE.Vector3( 0, 0, 1 );
+    camera.position.set( 60, 30, 10 );
+	//camera.position.set(30,5,60);
+	//camera.position.set(0,150,400);
+    camera.lookAt(scene.position);
 	// RENDERER
 	if ( Detector.webgl )
 		renderer = new THREE.WebGLRenderer( {antialias:true} );
@@ -136,83 +136,25 @@ function refresh(){
 	var light = new THREE.PointLight(0xffffff);
 	light.position.set(50,50,50);
     scene.add(light);
-    axis = new THREE.AxisHelper(100)
+    axis = new THREE.AxisHelper(100);
 	scene.add(axis);
+    //scene.fog = new THREE.FogExp2( 0x888888, 0.0025 );
     
+    // wireframe for xy-plane
+	var wireframeMaterial = new THREE.MeshBasicMaterial( { color: 'grey', wireframe: true, side:THREE.DoubleSide } );
+	var floorGeometry = new THREE.PlaneGeometry(100,100,10,10);
+	var floor = new THREE.Mesh(floorGeometry, wireframeMaterial);
+	floor.position.z = -0.01;
+    scene.add(floor);
+    
+    //var gridXY = new THREE.GridHelper(20, 20);
+    //gridXY.rotation.x = Math.PI/2;
+    //gridXY.position.set(5,5,0);
+    //scene.add(gridXY);
     
     
     // add 3D text
-	var materialFront = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
-	var materialSide = new THREE.MeshBasicMaterial( { color: 0x000088 } );
-	var materialArray = [ materialFront, materialSide ];
-	var textGeom = new THREE.TextGeometry( "positive z-axis",
-                                          {
-                                          size: 1.5, height: 1, curveSegments: 1,
-                                          font: "droid serif", weight: "bold", style: "normal",
-                                          bevelThickness: 0, bevelSize: 0, bevelEnabled: false,
-                                          material: 0, extrudeMaterial: 1
-                                          });
-                                          // font: helvetiker, gentilis, droid sans, droid serif, optimer
-                                          // weight: normal, bold
-                                          
-                                          var textMaterial = new THREE.MeshFaceMaterial(materialArray);
-                                          var textMesh = new THREE.Mesh(textGeom, textMaterial );
-                                          
-                                          //textGeom.computeBoundingBox();
-                                          //var textWidth = (textGeom.boundingBox.max.x - textGeom.boundingBox.min.x)/4;
-                                          
-                                          textMesh.position.set( -7, 0, 33 );
-                                          //textMesh.rotation.x = -Math.PI / 10;
-                                          scene.add(textMesh);
-                                          
-                                          
-                                          
-                                          
-    var textGeom_x = new THREE.TextGeometry( "positive x-axis",
-                                                                                {
-                                                                                size: 1, height: 0.5, curveSegments: 1,
-                                                                                font: "droid serif", weight: "normal", style: "normal",
-                                                                                bevelThickness: 0, bevelSize: 0, bevelEnabled: false,
-                                                                                material: 0, extrudeMaterial: 1
-                                                                                });
-                                                                                // font: helvetiker, gentilis, droid sans, droid serif, optimer
-                                                                                // weight: normal, bold
-                                                                                
-                                                                                var textMaterial_x = new THREE.MeshFaceMaterial(materialArray);
-                                                                                var textMesh_x = new THREE.Mesh(textGeom_x, textMaterial_x );
-                                                                                
-                                                                                //textGeom.computeBoundingBox();
-                                                                                //var textWidth = (textGeom.boundingBox.max.x - textGeom.boundingBox.min.x)/4;
-                                                                                
-                                                                                textMesh_x.position.set( 33, 0, 7 );
-                                                                                textMesh_x.rotation.y = +Math.PI/2;
-                                                                                scene.add(textMesh_x);
-
-
-
-var textGeom_y = new THREE.TextGeometry( "positive y-axis",
-                                        {
-                                        size: 1, height:0.5, curveSegments: 1,
-                                        font: "droid serif", weight: "bold", style: "normal",
-                                        bevelThickness: 0, bevelSize: 0, bevelEnabled: false,
-                                        material: 0, extrudeMaterial: 1
-                                        });
-                                        // font: helvetiker, gentilis, droid sans, droid serif, optimer
-                                        // weight: normal, bold
-                                        
-                                        var textMaterial_y = new THREE.MeshFaceMaterial(materialArray);
-                                        var textMesh_y = new THREE.Mesh(textGeom_y, textMaterial_y );
-                                        
-                                        //textGeom.computeBoundingBox();
-                                        //var textWidth = (textGeom.boundingBox.max.x - textGeom.boundingBox.min.x)/4;
-                                        
-                                        textMesh_y.position.set( 0, 20, 2 );
-                                        //textMesh_y.rotation.y = +Math.PI/2;
-                                        scene.add(textMesh_y);
-                                        
-
-
-
+	
 
     init();
     animate();
@@ -448,7 +390,20 @@ function render()
 
 </script>
 
+
 <p style="font-size:10px; position:absolute; left:10px">Click and drag to move the graph, scroll to zoom the graph.
+<br>
+
+positive z-axis: blue line
+
+<br>
+
+positive x-axis: red line
+<br>
+
+positive y-axis: green line
+
+</p>
 
 
 <script>
@@ -456,23 +411,7 @@ function render()
         
         alert("Mathematical functions and constants can be called by using Math as an object. For example, \n Math.E: the constant e,\n Math.PI: the constant Pi. \n Math.sin(x): function sin(x),\n Math.cos(x): function cos(x), \n Math.tan(x): function tan(x), \n Math.pow(a,b): a to the power of b,\n Math.log(x): log x of base e),\n Math.exp(x) (exponent of x), \n Math.abs(x): absolute value of x, \n Math.sqrt(x): square root of x.")
         
-        /*\n
-         Math.acos(a): arc cosine of a \n
-         Math.asin(a): arc sine of a \n
-         Math.atan(a): arc tangent of \n
-         Math.ceil(a): integer closest to a and not less than a \n
-         Math.cos(a): cosine of a \n
-         Math.exp(a): exponent of a (Math.E to the power a) \n
-         Math.floor(a): integer closest to a, not greater than a \n
-         Math.log(a): log of a base e
-         Math.max(a,b): the maximum of a and b
-         Math.min(a,b): the minimum of a and b
-         Math.pow(a,b): a to the power b
-         Math.random(): pseudorandom number 0 to 1 (see examples)
-         Math.round(a): integer closest to a (see rounding examples)
-         Math.sin(a): sine of a
-         Math.sqrt(a): square root of a
-         Math.tan(a): tangent of a")*/
+        
     }
 </script>
 

@@ -1,0 +1,295 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<link rel="stylesheet" type="text/css" href="text.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<head>
+    <title>Parametric 3D Curve</title>
+
+
+        <style type="text/css">
+        #maincontainer
+        {
+            top:0px;
+            padding-top:0;
+            margin:auto; position:relative;
+            width:950px;
+            height:100%;
+        }
+    </style>
+    
+
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="../3D-Grapher/graph3d-1.4/graph3d.js"></script>
+
+
+</head>
+
+<body>
+    
+    
+    <p>  Click <button onclick="info()">here</button> to see how to enter Math expressions in javascript.
+    
+    <BR>
+    
+    <BR>
+    <b>r</b>(t) = &lt; x(t), y(t), z(t) &gt;
+    
+    <BR>
+    <BR>
+    
+         x(t) = <input type="text" name="input" id="x_t" value="3*Math.cos(t)" style="width:350px;">
+            
+                
+        <br>
+        <br>
+        
+        y(t) = <input type="text" name="input" id="y_t" value="3*Math.sin(t)" style="width:350px;">
+            
+        <br>
+        <br>
+        
+        z(t) = <input type="text" name="input" id="z_t" value="t" style="width:350px;">
+        
+        
+        <br>
+        <br>
+        Domain:
+        
+        <br>
+        <input type="text" name="input" id="t_lower" value="0" style="width:100px;"> <= t <= <input type="text" name="input" id="t_upper" value="8*Math.PI" style="width:100px;">
+            
+               <br>
+        <br>
+        
+           <input type="submit" value="Draw curve" style="font-family: Monospace; font-size:15px"  onclick="custom_x(), custom_y(), custom_z(),  t_lower(), t_upper(), drawVisualization()">
+               
+               
+        <br>
+        <br>
+        
+            Keep Aspect Ratio :
+            
+            <select id="ratio" onChange="set_ratio(), drawVisualization()">
+                
+                <option value="false"> false </option>
+                               
+                <option value="true"> true </option>
+                               
+
+            </select>
+            <br>
+            
+            (set it to "true" if you want the x- and y-axis to have the same ratio.)
+
+
+
+
+    </p>
+
+
+<script>
+    function info(){
+        
+        alert("Mathematical functions and constants can be called by using Math as an object. For example, \n Math.E: the constant e,\n Math.PI: the constant Pi. \n Math.sin(x): function sin(x),\n Math.cos(x): function cos(x), \n Math.tan(x): function tan(x), \n Math.pow(a,b): a to the power of b,\n Math.log(x): log x of base e),\n Math.exp(x) (exponent of x), \n Math.abs(x): absolute value of x, \n Math.sqrt(x): square root of x.")
+        
+        
+    }
+</script>
+
+<script type="text/javascript">
+    var data = null;
+    var graph = null;
+    var myoption = [];
+    var theoption;
+    var options = {
+        width:  "400px",
+        height: "380px",
+        style: "line-color",
+        showPerspective: false,
+        showGrid: true,
+        showShadow: false,
+        keepAspectRatio: false,
+        verticalRatio: 1,
+        //animationInterval: 35, // milliseconds
+        //animationPreload: true,
+        //animationAutoStart: true,
+        
+    };
+
+var options2 = {
+    width:  "400px",
+    height: "380px",
+    style: "line-color",
+    showPerspective: false,
+    showGrid: true,
+    keepAspectRatio: true,
+    verticalRatio: 1.0,
+    animationInterval: 35, // milliseconds
+    animationPreload: false,
+    animationAutoStart: true,
+};
+
+
+var options3 = {
+    width:  "400px",
+    height: "380px",
+    style: "dot-color",
+    showPerspective: false,
+    showGrid: true,
+    keepAspectRatio: true,
+    verticalRatio: 1.0,
+    animationInterval: 35, // milliseconds
+    animationPreload: false,
+    animationAutoStart: true,
+};
+
+
+
+myoption[0]=options;
+myoption[1]=options2;
+myoption[2]=options3;
+
+
+theoption=myoption[0];
+
+    google.load("visualization", "1");
+    
+    // Set callback to run when API is loaded
+    google.setOnLoadCallback(drawVisualization);
+    
+    
+    
+
+    function custom_x(){
+        var x = document.getElementById("x_t").value;
+    
+        function func_x(t){
+            return eval(x);
+            
+        
+        }
+        
+        return func_x;
+         
+    }
+
+    function custom_y(){
+        var y = document.getElementById("y_t").value;
+    
+        function func_y(t){
+            return eval(y);
+        
+        
+        }
+    
+        return func_y;
+    
+    }
+
+    function custom_z(){
+        var z = document.getElementById("z_t").value;
+    
+        function func_z(t){
+            return eval(z);
+        
+        
+        }
+    
+        return func_z;
+    
+    }
+
+    function t_lower(){
+
+        return eval(document.getElementById("t_lower").value);
+
+    }
+
+    function t_upper(){
+    
+        return eval(document.getElementById("t_upper").value);
+    
+    }
+
+    function set_ratio(){
+        if (document.getElementById("ratio").value=="true"){
+            theoption=myoption[1];
+        } else{
+            theoption=myoption[0];
+        }
+    }
+
+
+// Called when the Visualization API is loaded.
+function drawVisualization() {
+    
+   
+    // Create and populate a data table.
+    
+    
+    data = new google.visualization.DataTable();
+    data.addColumn('number', 'x');
+    data.addColumn('number', 'y');
+    data.addColumn('number', 'z');
+    
+
+
+    //data.addColumn('number', 'color value');
+    //data.addColumn('number', 'time');
+    
+   
+    // create some nice looking data with sin/cos
+    var steps = 500;
+    var t_step = (t_upper()-t_lower())/steps;
+    for (var t = t_lower(); t < t_upper(); t += t_step) {
+        var tgroup = parseFloat(t.toFixed(2));
+        var x = custom_x()(t);
+        var y = custom_y()(t);
+        var z = custom_z()(t);
+        data.addRow([x, y, z]);
+    }
+    
+    // Instantiate our graph object.
+    graph = new links.Graph3d(document.getElementById('mygraph'));
+
+    
+    // Draw our graph with the created data and options
+    graph.draw(data, theoption);
+    
+}
+</script>
+
+
+
+
+
+
+
+<div id="mygraph"></div>
+
+
+<div id="maincontainer"></div>
+
+<BR>
+
+
+
+<p class="two">
+Click and drag to move the graph, scroll to zoom the graph.
+
+<BR>
+
+<BR>
+
+Created by Dr. Ku Cheng Yeaw using the CHAP Links Library.
+
+<BR>
+
+
+</p>
+
+</body>
+</html>
+
