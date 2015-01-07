@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Implicit 3D Plot</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel=stylesheet href="Three.js/css/base.css"/>
+     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    
+    </head>
+<body>
+
+<script src="typeface-0.15.js"></script>
+<script src="Three.js/js/Three.js"></script>
+<script src="Three.js/js/Detector.js"></script>
+<script src="Three.js/js/Stats.js"></script>
+<script src="Three.js/js/OrbitControls.js"></script>
+<script src="Three.js/js/THREEx.KeyboardState.js"></script>
+<script src="Three.js/js/THREEx.FullScreen.js"></script>
+<script src="Three.js/js/THREEx.WindowResize.js"></script>
+
+<!-- load fonts -->
+<script src="Three.js/fonts/gentilis_bold.typeface.js"></script>
+<script src="Three.js/fonts/gentilis_regular.typeface.js"></script>
+<script src="Three.js/fonts/optimer_bold.typeface.js"></script>
+<script src="Three.js/fonts/optimer_regular.typeface.js"></script>
+<script src="Three.js/fonts/helvetiker_bold.typeface.js"></script>
+<script src="Three.js/fonts/helvetiker_regular.typeface.js"></script>
+<script src="Three.js/fonts/droid_sans_regular.typeface.js"></script>
+<script src="Three.js/fonts/droid_sans_bold.typeface.js"></script>
+<script src="Three.js/fonts/droid_serif_regular.typeface.js"></script>
+<script src="Three.js/fonts/droid_serif_bold.typeface.js"></script>
+
+<!-- Contains Lookup Tables for the Marching Cubes Algorithm -->
+<script src="Three.js/js/MarchingCubesData.js"></script>
+<div id="ThreeJS" style="position: absolute; left:0px; top:90px; z-index:-1"></div>
+
+
+<p> For optimal viewing experience, use Chrome or Firefox web browser. Created by Dr. Ku Cheng Yeaw using Three.js.
+</p>
+
+<p>
+Click <button onclick="info()">here</button> to see how to enter Math expressions in javascript.
+</p>
+
+
+<p> f(x,y,z) =  <input type="text" name="input" id="fun" value="0.1*(x*x+y*y)-z" style="width:300px;"> = 0. <input type="submit" value="Draw" style="font-family: Monospace; font-size:15px"  onclick="scene.remove(mesh), refresh1(), init(), animate()">
+</p>
+
+<p> g(x,y,z) =  <input type="text" name="input" id="fun2" value="x*x-y*y-z" style="width:300px;"> = 0. <input type="submit" value="Draw" style=", font-family: Monospace; font-size:15px"  onclick="scene.remove(mesh2), refresh2(), init2(), animate()"> </p>
+
+<p>
+<input type="submit" value="View from positive z-axis" style=", font-family: Monospace; font-size:15px"  onclick="camera.position.set(0,0,50); ">
+
+
+<input type="submit" value="View from positive x-axis" style=", font-family: Monospace; font-size:15px"  onclick="camera.position.set(50,0,0); ">
+    
+    
+    <input type="submit" value="View from positive y-axis" style=", font-family: Monospace; font-size:15px"  onclick="camera.position.set(0,50,0); ">
+        </p>
+    
+
+
+<p style="font-size:10px; position:absolute; left:10px">Click and drag to move the graph, scroll to zoom the graph.
+<br>
+
+positive z-axis: blue line
+
+<br>
+
+positive x-axis: red line
+<br>
+
+positive y-axis: green line
+</p>
+
+<script>
+    function info(){
+        
+        alert("Mathematical functions and constants can be called by using Math as an object. For example, \n Math.E: the constant e,\n Math.PI: the constant Pi. \n Math.sin(x): function sin(x),\n Math.cos(x): function cos(x), \n Math.tan(x): function tan(x), \n Math.pow(a,b): a to the power of b,\n Math.log(x): log x of base e),\n Math.exp(x) (exponent of x), \n Math.abs(x): absolute value of x, \n Math.sqrt(x): square root of x.")
+    }
+</script>
+
+
+
+
+<script type="text/javascript">
+
+// MAIN
+
+// standard global variables
+var container, scene, camera, renderer, controls, stats;
+var keyboard = new THREEx.KeyboardState();
+var clock = new THREE.Clock();
+
+// custom global variables
+var mesh=[];
+var mesh2=[];
+var points = [];
+var values = [];
+var size;
+var myfun = document.getElementById("fun").value;
+
+
+
+
+// SCENE
+scene = new THREE.Scene();
+
+// CAMERA
+var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+    
+//var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = 500;
+
+var VIEW_ANGLE = 55, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+
+camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+scene.add(camera);
+    
+camera.up = new THREE.Vector3( 0, 0, 1 );
+//camera.position.set( 10, -40, 30 );
+camera.position.set(50,10,30);
+//camera.position.set(0,0,50); //from positive z-axis
+// camera.position.set(50,0,0); //from positive x-axis
+//camera.position.set(0,50,0); //from positive y-axis
+
+
+
+camera.lookAt(scene.position);
+
+
+    // RENDERER
+	if ( Detector.webgl )
+		renderer = new THREE.WebGLRenderer( {antialias:true} );
+	else
+		renderer = new THREE.CanvasRenderer();
+        
+    renderer.setClearColor( 0xffffff );
+    
+	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	container = document.getElementById( 'ThreeJS' );
+	container.appendChild( renderer.domElement );
+	// EVENTS
+	THREEx.WindowResize(renderer, camera);
+	THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
+	// CONTROLS
+	controls = new THREE.OrbitControls( camera, renderer.domElement );
+	// STATS
+	stats = new Stats();
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.bottom = '0px';
+	stats.domElement.style.zIndex = 100;
+	container.appendChild( stats.domElement );
+	// LIGHT
+	var light = new THREE.PointLight(0xffffff);
+	light.position.set(50,50,50);
+    scene.add(light);
+    axis = new THREE.AxisHelper(100);
+	scene.add(axis);
+    //scene.fog = new THREE.FogExp2( 0x888888, 0.0025 );
+    
+    // wireframe for xy-plane
+	var wireframeMaterial = new THREE.MeshBasicMaterial( { color: 'grey', wireframe: true, side:THREE.DoubleSide } );
+	var floorGeometry = new THREE.PlaneGeometry(100,100,10,10);
+	var floor = new THREE.Mesh(floorGeometry, wireframeMaterial);
+	floor.position.z = -0.01;
+    scene.add(floor);
+    
+    
+    //draw first function
+    init();
+    animate();
+    
+    //draw second function
+    sec_fun();
+    fxyz();
+    draw_sec();
+    
+    init2();
+    animate();
+    
+    
+    
+
+
+//FUNCTIONS
+
+//get input function
+function fxyz(){
+    
+    function func(x,y,z){
+        return eval(myfun);
+    }
+    return func;
+}
+
+
+
+function sec_fun(){
+    myfun = document.getElementById("fun2").value;
+    
+
+}
+// refresh mesh on input
+
+function refresh1(){
+    myfun = document.getElementById("fun").value;
+    fxyz();
+    mesh = [];
+    points = [];
+    values = [];
+    
+}
+
+
+function refresh2(){
+    myfun = document.getElementById("fun2").value;
+    fxyz();
+    mesh2 = [];
+    points = [];
+    values = [];
+    
+}
+
+
+function draw_sec(){
+    points=[];
+    values=[];
+    size;
+    
+}
+
+//initialization
+function init(){
+    
+    
+	// number of cubes along a side
+	size = 30;
+
+	var axisMin = -10;
+	var axisMax =  10;
+	var axisRange = axisMax - axisMin;
+	
+	// Generate a list of 3D points and values at those points
+	for (var k = 0; k < size; k++)
+	for (var j = 0; j < size; j++)
+	for (var i = 0; i < size; i++)
+	{
+		// actual values
+		var x = axisMin + axisRange * i / (size - 1);
+		var y = axisMin + axisRange * j / (size - 1);
+		var z = axisMin + axisRange * k / (size - 1);
+		points.push( new THREE.Vector3(x,y,z) );
+        var value = fxyz()(x,y,z);
+	    values.push( value );
+	}
+    
+	// Marching Cubes Algorithm
+	
+	var size2 = size * size;
+
+	// Vertices may occur along edges of cube, when the values at the edge's endpoints
+	//   straddle the isolevel value.
+	// Actual position along edge weighted according to function values.
+	var vlist = new Array(12);
+	
+	var geometry = new THREE.Geometry();
+
+	var vertexIndex = 0;
+	
+	for (var z = 0; z < size - 1; z++)
+	for (var y = 0; y < size - 1; y++)
+	for (var x = 0; x < size - 1; x++)
+	{
+		// index of base point, and also adjacent points on cube
+		var p    = x + size * y + size2 * z,
+			px   = p   + 1,
+			py   = p   + size,
+			pxy  = py  + 1,
+			pz   = p   + size2,
+			pxz  = px  + size2,
+			pyz  = py  + size2,
+			pxyz = pxy + size2;
+		
+		// store scalar values corresponding to vertices
+		var value0 = values[ p    ],
+			value1 = values[ px   ],
+			value2 = values[ py   ],
+			value3 = values[ pxy  ],
+			value4 = values[ pz   ],
+			value5 = values[ pxz  ],
+			value6 = values[ pyz  ],
+			value7 = values[ pxyz ];
+		
+		// place a "1" in bit positions corresponding to vertices whose
+		//   isovalue is less than given constant.
+		
+		var isolevel = 0;
+		
+		var cubeindex = 0;
+		if ( value0 < isolevel ) cubeindex |= 1;
+		if ( value1 < isolevel ) cubeindex |= 2;
+		if ( value2 < isolevel ) cubeindex |= 8;
+		if ( value3 < isolevel ) cubeindex |= 4;
+		if ( value4 < isolevel ) cubeindex |= 16;
+		if ( value5 < isolevel ) cubeindex |= 32;
+		if ( value6 < isolevel ) cubeindex |= 128;
+		if ( value7 < isolevel ) cubeindex |= 64;
+		
+		// bits = 12 bit number, indicates which edges are crossed by the isosurface
+		var bits = THREE.edgeTable[ cubeindex ];
+		
+		// if none are crossed, proceed to next iteration
+		if ( bits === 0 ) continue;
+		
+		// check which edges are crossed, and estimate the point location
+		//    using a weighted average of scalar values at edge endpoints.
+		// store the vertex in an array for use later.
+		var mu = 0.5; 
+		
+		// bottom of the cube
+		if ( bits & 1 )
+		{		
+			mu = ( isolevel - value0 ) / ( value1 - value0 );
+			vlist[0] = points[p].clone().lerp( points[px], mu );
+		}
+		if ( bits & 2 )
+		{
+			mu = ( isolevel - value1 ) / ( value3 - value1 );
+			vlist[1] = points[px].clone().lerp( points[pxy], mu );
+		}
+		if ( bits & 4 )
+		{
+			mu = ( isolevel - value2 ) / ( value3 - value2 );
+			vlist[2] = points[py].clone().lerp( points[pxy], mu );
+		}
+		if ( bits & 8 )
+		{
+			mu = ( isolevel - value0 ) / ( value2 - value0 );
+			vlist[3] = points[p].clone().lerp( points[py], mu );
+		}
+		// top of the cube
+		if ( bits & 16 )
+		{
+			mu = ( isolevel - value4 ) / ( value5 - value4 );
+			vlist[4] = points[pz].clone().lerp( points[pxz], mu );
+		}
+		if ( bits & 32 )
+		{
+			mu = ( isolevel - value5 ) / ( value7 - value5 );
+			vlist[5] = points[pxz].clone().lerp( points[pxyz], mu );
+		}
+		if ( bits & 64 )
+		{
+			mu = ( isolevel - value6 ) / ( value7 - value6 );
+			vlist[6] = points[pyz].clone().lerp( points[pxyz], mu );
+		}
+		if ( bits & 128 )
+		{
+			mu = ( isolevel - value4 ) / ( value6 - value4 );
+			vlist[7] = points[pz].clone().lerp( points[pyz], mu );
+		}
+		// vertical lines of the cube
+		if ( bits & 256 )
+		{
+			mu = ( isolevel - value0 ) / ( value4 - value0 );
+			vlist[8] = points[p].clone().lerp( points[pz], mu );
+		}
+		if ( bits & 512 )
+		{
+			mu = ( isolevel - value1 ) / ( value5 - value1 );
+			vlist[9] = points[px].clone().lerp( points[pxz], mu );
+		}
+		if ( bits & 1024 )
+		{
+			mu = ( isolevel - value3 ) / ( value7 - value3 );
+			vlist[10] = points[pxy].clone().lerp( points[pxyz], mu );
+		}
+		if ( bits & 2048 )
+		{
+			mu = ( isolevel - value2 ) / ( value6 - value2 );
+			vlist[11] = points[py].clone().lerp( points[pyz], mu );
+		}
+		
+        
+       		// construct triangles -- get correct vertices from triTable.
+		var i = 0;
+		cubeindex <<= 4;  // multiply by 16... 
+		// "Re-purpose cubeindex into an offset into triTable." 
+		//  since each row really isn't a row.
+		 
+		// the while loop should run at most 5 times,
+		//   since the 16th entry in each row is a -1.
+		while ( THREE.triTable[ cubeindex + i ] != -1 ) 
+		{
+			var index1 = THREE.triTable[cubeindex + i];
+			var index2 = THREE.triTable[cubeindex + i + 1];
+			var index3 = THREE.triTable[cubeindex + i + 2];
+			
+			geometry.vertices.push( vlist[index1].clone() );
+			geometry.vertices.push( vlist[index2].clone() );
+			geometry.vertices.push( vlist[index3].clone() );
+			var face = new THREE.Face3(vertexIndex, vertexIndex+1, vertexIndex+2);
+			geometry.faces.push( face );
+
+			geometry.faceVertexUvs[ 0 ].push( [ new THREE.Vector2(0,0), new THREE.Vector2(0,1), new THREE.Vector2(1,1) ] );
+
+			vertexIndex += 3;
+			i += 3;
+		}
+	}
+	
+	geometry.computeCentroids();
+	geometry.computeFaceNormals();
+	geometry.computeVertexNormals();
+    
+    
+
+
+	
+	//var colorMaterial =  new THREE.MeshLambertMaterial( {color:
+                                                //       0x0000ff , side: THREE.DoubleSide} );
+                                                       
+                                                       
+    //var colorMaterial = new THREE.MeshNormalMaterial( { overdraw: 0.5, side: THREE.DoubleSide } );
+    
+    
+    var materialLines = new THREE.MeshBasicMaterial( { color: 0x0000ff, wireframe: true, side: THREE.DoubleSide } );
+
+
+    mesh = new THREE.Mesh( geometry, new THREE.MeshNormalMaterial( {overdraw: 0.5, side: THREE.DoubleSide} ));
+
+	scene.add(mesh);
+}
+
+
+function init2(){
+    
+    
+	// number of cubes along a side
+	size = 30;
+    
+	var axisMin = -10;
+	var axisMax =  10;
+	var axisRange = axisMax - axisMin;
+	
+	// Generate a list of 3D points and values at those points
+	for (var k = 0; k < size; k++)
+	for (var j = 0; j < size; j++)
+	for (var i = 0; i < size; i++)
+	{
+		// actual values
+		var x = axisMin + axisRange * i / (size - 1);
+		var y = axisMin + axisRange * j / (size - 1);
+		var z = axisMin + axisRange * k / (size - 1);
+		points.push( new THREE.Vector3(x,y,z) );
+        var value = fxyz()(x,y,z);
+	    values.push( value );
+	}
+    
+	// Marching Cubes Algorithm
+	
+	var size2 = size * size;
+    
+	// Vertices may occur along edges of cube, when the values at the edge's endpoints
+	//   straddle the isolevel value.
+	// Actual position along edge weighted according to function values.
+	var vlist = new Array(12);
+	
+	var geometry = new THREE.Geometry();
+    
+	var vertexIndex = 0;
+	
+	for (var z = 0; z < size - 1; z++)
+	for (var y = 0; y < size - 1; y++)
+	for (var x = 0; x < size - 1; x++)
+	{
+		// index of base point, and also adjacent points on cube
+		var p    = x + size * y + size2 * z,
+        px   = p   + 1,
+        py   = p   + size,
+        pxy  = py  + 1,
+        pz   = p   + size2,
+        pxz  = px  + size2,
+        pyz  = py  + size2,
+        pxyz = pxy + size2;
+		
+		// store scalar values corresponding to vertices
+		var value0 = values[ p    ],
+        value1 = values[ px   ],
+        value2 = values[ py   ],
+        value3 = values[ pxy  ],
+        value4 = values[ pz   ],
+        value5 = values[ pxz  ],
+        value6 = values[ pyz  ],
+        value7 = values[ pxyz ];
+		
+		// place a "1" in bit positions corresponding to vertices whose
+		//   isovalue is less than given constant.
+		
+		var isolevel = 0;
+		
+		var cubeindex = 0;
+		if ( value0 < isolevel ) cubeindex |= 1;
+		if ( value1 < isolevel ) cubeindex |= 2;
+		if ( value2 < isolevel ) cubeindex |= 8;
+		if ( value3 < isolevel ) cubeindex |= 4;
+		if ( value4 < isolevel ) cubeindex |= 16;
+		if ( value5 < isolevel ) cubeindex |= 32;
+		if ( value6 < isolevel ) cubeindex |= 128;
+		if ( value7 < isolevel ) cubeindex |= 64;
+		
+		// bits = 12 bit number, indicates which edges are crossed by the isosurface
+		var bits = THREE.edgeTable[ cubeindex ];
+		
+		// if none are crossed, proceed to next iteration
+		if ( bits === 0 ) continue;
+		
+		// check which edges are crossed, and estimate the point location
+		//    using a weighted average of scalar values at edge endpoints.
+		// store the vertex in an array for use later.
+		var mu = 0.5;
+		
+		// bottom of the cube
+		if ( bits & 1 )
+		{
+			mu = ( isolevel - value0 ) / ( value1 - value0 );
+			vlist[0] = points[p].clone().lerp( points[px], mu );
+		}
+		if ( bits & 2 )
+		{
+			mu = ( isolevel - value1 ) / ( value3 - value1 );
+			vlist[1] = points[px].clone().lerp( points[pxy], mu );
+		}
+		if ( bits & 4 )
+		{
+			mu = ( isolevel - value2 ) / ( value3 - value2 );
+			vlist[2] = points[py].clone().lerp( points[pxy], mu );
+		}
+		if ( bits & 8 )
+		{
+			mu = ( isolevel - value0 ) / ( value2 - value0 );
+			vlist[3] = points[p].clone().lerp( points[py], mu );
+		}
+		// top of the cube
+		if ( bits & 16 )
+		{
+			mu = ( isolevel - value4 ) / ( value5 - value4 );
+			vlist[4] = points[pz].clone().lerp( points[pxz], mu );
+		}
+		if ( bits & 32 )
+		{
+			mu = ( isolevel - value5 ) / ( value7 - value5 );
+			vlist[5] = points[pxz].clone().lerp( points[pxyz], mu );
+		}
+		if ( bits & 64 )
+		{
+			mu = ( isolevel - value6 ) / ( value7 - value6 );
+			vlist[6] = points[pyz].clone().lerp( points[pxyz], mu );
+		}
+		if ( bits & 128 )
+		{
+			mu = ( isolevel - value4 ) / ( value6 - value4 );
+			vlist[7] = points[pz].clone().lerp( points[pyz], mu );
+		}
+		// vertical lines of the cube
+		if ( bits & 256 )
+		{
+			mu = ( isolevel - value0 ) / ( value4 - value0 );
+			vlist[8] = points[p].clone().lerp( points[pz], mu );
+		}
+		if ( bits & 512 )
+		{
+			mu = ( isolevel - value1 ) / ( value5 - value1 );
+			vlist[9] = points[px].clone().lerp( points[pxz], mu );
+		}
+		if ( bits & 1024 )
+		{
+			mu = ( isolevel - value3 ) / ( value7 - value3 );
+			vlist[10] = points[pxy].clone().lerp( points[pxyz], mu );
+		}
+		if ( bits & 2048 )
+		{
+			mu = ( isolevel - value2 ) / ( value6 - value2 );
+			vlist[11] = points[py].clone().lerp( points[pyz], mu );
+		}
+		
+        
+        // construct triangles -- get correct vertices from triTable.
+		var i = 0;
+		cubeindex <<= 4;  // multiply by 16...
+		// "Re-purpose cubeindex into an offset into triTable."
+		//  since each row really isn't a row.
+        
+		// the while loop should run at most 5 times,
+		//   since the 16th entry in each row is a -1.
+		while ( THREE.triTable[ cubeindex + i ] != -1 )
+		{
+			var index1 = THREE.triTable[cubeindex + i];
+			var index2 = THREE.triTable[cubeindex + i + 1];
+			var index3 = THREE.triTable[cubeindex + i + 2];
+			
+			geometry.vertices.push( vlist[index1].clone() );
+			geometry.vertices.push( vlist[index2].clone() );
+			geometry.vertices.push( vlist[index3].clone() );
+			var face = new THREE.Face3(vertexIndex, vertexIndex+1, vertexIndex+2);
+			geometry.faces.push( face );
+            
+			geometry.faceVertexUvs[ 0 ].push( [ new THREE.Vector2(0,0), new THREE.Vector2(0,1), new THREE.Vector2(1,1) ] );
+            
+			vertexIndex += 3;
+			i += 3;
+		}
+	}
+	
+	geometry.computeCentroids();
+	geometry.computeFaceNormals();
+	geometry.computeVertexNormals();
+    
+    
+    
+    
+	
+	//var colorMaterial =  new THREE.MeshLambertMaterial( {color:
+     //      0x0000ff , side: THREE.DoubleSide} );
+    
+    
+    //var colorMaterial = new THREE.MeshNormalMaterial( { overdraw: 0.5, side: THREE.DoubleSide } );
+    
+    //colorMaterial.transparent = true;
+    
+    
+    var material = new THREE.MeshNormalMaterial( { color: 0x0000ff, opacity:1, wireframe:  false, side: THREE.DoubleSide } );
+    
+    
+    //mesh2 = new THREE.Mesh( geometry, new THREE.MeshNormalMaterial( {overdraw: 0.5, side: THREE.DoubleSide} ));
+    
+    mesh2 = new THREE.Mesh( geometry, material);
+    
+	scene.add(mesh2);
+}
+
+function animate()
+{
+    requestAnimationFrame( animate );
+	render();		
+	update();
+}
+
+function update()
+{
+	controls.update();
+	stats.update();
+}
+
+function render() 
+{
+	renderer.render( scene, camera );
+}
+
+
+
+
+
+//Second Surface
+
+
+</script>
+</body>
+</html>
+
+
