@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 <script src='js/three.min.js'></script>
 
@@ -8,6 +11,16 @@
 <script src="Three.js/js/MarchingCubesData.js"></script>
 
 </head>
+<nav class="navbar navbar-default">
+<form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+    </nav>
+
+
 <div style='position: absolute; top: 0px; width: 100%;font-family:arial; font-weight: bolder; padding-top: 5px;'>
     
 </div><body style='margin: 0px; overflow: hidden; text-align:center;'><script>
@@ -33,7 +46,7 @@
     scene.add(axis);
     var camera  = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20000);
     camera.up = new THREE.Vector3( 0, 0, 1 );
-    camera.position.set( 45, 30, 10 );
+    camera.position.set( 45, 30, 20 );
     //camera.position.z = 2;
     var controls    = new THREE.OrbitControls(camera)
     //////////////////////////////////////////////////////////////////////////////////
@@ -94,6 +107,7 @@ function init(){
         var z = axisMin + axisRange * k / (size - 1);
         points.push( new THREE.Vector3(x,y,z) );
         var value = Math.cos(x) + Math.cos(y) + Math.cos(z);
+        //var value = x*x-y*y-z;
         values.push( value );
     }
     // Marching Cubes Algorithm
