@@ -1,18 +1,22 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-<script src='js/three.min.js'></script>
-
-<script src="js/OrbitControls.js"></script>
-<script src="Three.js/js/MarchingCubesData.js"></script>
-
+    <title>Implicit 3d Plot</title>
+    <meta charset="utf-8">
+    <!-- Latest compiled and minified CSS-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 </head>
+
+
+<body>
+
+<!--
 <ul class="nav nav-pills">
   <li role="presentation" class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
@@ -20,16 +24,77 @@
     </a>
     <ul class="dropdown-menu">
         <li><a href="#">HTML</a></li>
-      <li><a href="#">CSS</a></li>
-      <li><a href="#">JavaScript</a></li>
+        <li><a href="#">CSS</a></li>
+        <li><a href="#">JavaScript</a></li>
     </ul>
   </li>
+  
+   
+
+
 </ul>
+-->
+
+<br>
+
+<div class="row">
+  <div class="col-lg-6">
+    <div class="input-group">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Menu <span class="caret"></span>
+        </button>
+        <div class="dropdown-menu">
+          <li><a href="#">1 Surface</a></li>
+        <li><a href="#">2 Surfaces</a></li>
+        <li><a href="#">Space Curve</a></li>
+        </div>
+      </div>
+      <input type="text" class="form-control" placeholder="Enter equation here" aria-label="Text input with dropdown button" id="fun" value="Math.cos(x) + Math.cos(y) + Math.cos(z)" >
+        <span class="input-group-addon"> = 0.</span>
+        <span class="input-group-btn">
+        <input class="btn btn-default" id="fun" type="submit" value="Go!"  onclick="fxyz(), refresh(), init(), animate()">
+      </span>
+      
+
+</div>
+</div>
+
 
 
 <div style='position: absolute; top: 0px; width: 100%;font-family:arial; font-weight: bolder; padding-top: 5px;'>
     
-</div><body style='margin: 0px; overflow: hidden; text-align:center;'><script>
+</div>
+
+<!--<body style='margin: 0px; overflow: hidden; text-align:center;'>-->
+
+<script type="text/javascript" src='js/three.min.js'></script>
+<script src="js/OrbitControls.js"></script>
+<script src="Three.js/js/MarchingCubesData.js"></script>
+
+
+
+
+<script type="text/javascript">
+function fxyz(){
+    var myfun = document.getElementById("fun").value;
+    
+    function func(x,y,z){
+        return eval(myfun);
+    }
+    return func;
+}
+
+
+
+function refresh(){
+    scene.remove(mesh);
+    mesh = [];
+    points = [];
+    values = [];
+    }
+
+
     //////////////////////////////////////////////////////////////////////////////////
     //      Init
     //////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +119,7 @@
     camera.up = new THREE.Vector3( 0, 0, 1 );
     camera.position.set( 45, 30, 20 );
     //camera.position.z = 2;
-    var controls    = new THREE.OrbitControls(camera)
+    var controls    = new THREE.OrbitControls(camera, renderer.domElement)
     //////////////////////////////////////////////////////////////////////////////////
     //      add an object in the scene
     //////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +128,10 @@
     //var material    = new THREE.MeshNormalMaterial(); 
     //var mesh    = new THREE.Mesh( geometry, material );
     //scene.add( mesh );
-    init()
+    //init()
+
+    init();
+    animate();
     //////////////////////////////////////////////////////////////////////////////////
     //      render the whole thing on the page
     //////////////////////////////////////////////////////////////////////////////////
@@ -112,8 +180,8 @@ function init(){
         var y = axisMin + axisRange * j / (size - 1);
         var z = axisMin + axisRange * k / (size - 1);
         points.push( new THREE.Vector3(x,y,z) );
-        var value = Math.cos(x) + Math.cos(y) + Math.cos(z);
-        //var value = x*x-y*y-z;
+        //var value = Math.cos(x) + Math.cos(y) + Math.cos(z);
+        var value = fxyz()(x,y,z);
         values.push( value );
     }
     // Marching Cubes Algorithm
@@ -260,5 +328,39 @@ function init(){
 
     scene.add(mesh);
 }
-</script></body>
+
+
+
+
+function animate() 
+{
+    requestAnimationFrame( animate );
+    render();       
+    update();
+}
+
+function update()
+{
+    controls.update();
+    stats.update();
+}
+
+function render() 
+{
+    renderer.render( scene, camera );
+}
+
+
+
+
+
+</script>
+
+
+
+
+</body>
+
+
 </html>
+
