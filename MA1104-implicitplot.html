@@ -1,422 +1,391 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<title>Implicit 3d Plot</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-	<link rel=stylesheet href="Three.js/css/base.css"/>
-     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-    
-    </head>
+    <title>Implicit 3d Plot</title>
+    <meta charset="utf-8">
+    <!-- Latest compiled and minified CSS-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+</head>
+
+
 <body>
 
-<script src="typeface-0.15.js"></script>
-<script src="Three.js/js/Three.js"></script>
-<script src="Three.js/js/Detector.js"></script>
-<script src="Three.js/js/Stats.js"></script>
-<script src="THree.js/js/OrbitControls.js"></script>
-<script src="Three.js/js/THREEx.KeyboardState.js"></script>
-<script src="Three.js/js/THREEx.FullScreen.js"></script>
-<script src="Three.js/js/THREEx.WindowResize.js"></script>
+<!--
+<ul class="nav nav-pills">
+  <li role="presentation" class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+      Menu <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+        <li><a href="#">HTML</a></li>
+        <li><a href="#">CSS</a></li>
+        <li><a href="#">JavaScript</a></li>
+    </ul>
+  </li>
+  
+   
+</ul>
+-->
 
-<!-- load fonts -->
-<script src="Three.js/fonts/gentilis_bold.typeface.js"></script>
-<script src="Three.js/fonts/gentilis_regular.typeface.js"></script>
-<script src="Three.js/fonts/optimer_bold.typeface.js"></script>
-<script src="Three.js/fonts/optimer_regular.typeface.js"></script>
-<script src="Three.js/fonts/helvetiker_bold.typeface.js"></script>
-<script src="Three.js/fonts/helvetiker_regular.typeface.js"></script>
-<script src="Three.js/fonts/droid_sans_regular.typeface.js"></script>
-<script src="Three.js/fonts/droid_sans_bold.typeface.js"></script>
-<script src="Three.js/fonts/droid_serif_regular.typeface.js"></script>
-<script src="Three.js/fonts/droid_serif_bold.typeface.js"></script>
+<br>
+<ul class="nav nav-pills">
+<div class="row">
+  <div class="col-lg-6">
+    <div class="input-group">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Menu <span class="caret"></span>
+        </button>
+        <div class="dropdown-menu">
+          <li><a href="surface.html">1 Surface</a></li>
+        <li><a href="2surfaces.html">2 Surfaces</a></li>
+        <li><a href="MA1104-3dcurve.html">Space Curve</a></li>
+        </div>
+      </div>
+      <input type="text" class="form-control" placeholder="Enter equation here" aria-label="Text input with dropdown button" id="fun" value="Math.cos(x) + Math.cos(y) + Math.cos(z)" >
+        <span class="input-group-addon"> = 0.</span>
+        <span class="input-group-btn">
+        <input class="btn btn-default" id="fun" type="submit" value="Go!"  onclick="fxyz(), refresh(), init(), animate()">
+      </span>
+    </div>
+  </div>
 
-<!-- Contains Lookup Tables for the Marching Cubes Algorithm -->
-<script src="Three.js/js/MarchingCubesData.js"></script>
-<div id="ThreeJS" style="position: absolute; left:0px; top:90px; z-index:-1"></div>
-
-
-<p> For optimal viewing experience, use Chrome or Firefox web browser. Created by Dr. Ku Cheng Yeaw using Three.js.
-</p>
-
-<p>
-Click <button onclick="info()">here</button> to see how to enter Math expressions in javascript.
-</p>
-
-
-<p> f(x,y,z) =  <input type="text" name="input" id="fun" value="Math.cos(x) + Math.cos(y) + Math.cos(z)" style="width:300px;"> = 0. <input type="submit" value="Draw" style="font-family: Monospace; font-size:30px"  onclick="fxyz(), refresh(), init(), animate()">
+<div style='position: absolute; top: 0px; width: 100%;font-family:arial; font-weight: bolder; padding-top: 5px;'>
     
-</p>
+</div>
+
+<div class="container">
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">How to enter math expressions</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Some mathematical expressions</h4>
+        </div>
+        <div class="modal-body">
+          <p>Mathematical functions and constants can be called by using Math  as an object. For example, 
+
+
+ <li> Math.E: the constant e,
+
+ <li> Math.PI: the constant Pi. 
+ 
+ <li> Math.sin(x): function sin(x),
+ 
+ <li> Math.cos(x): function cos(x), 
+ 
+ <li> Math.tan(x): function tan(x), 
+ 
+ <li> Math.pow(a,b): a to the power of b,
+ 
+ <li> Math.log(x): log x of base e),
+ 
+ <li> Math.exp(x) (exponent of x), 
+ 
+ <li> Math.abs(x): absolute value of x, 
+ 
+ <li> Math.sqrt(x): square root of x.
+
+<li> Some common operations:
+
+
+<li> * : multiply
+<li> / : divide
+
+ </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
+
+
+</ul>
+<!--<body style='margin: 0px; overflow: hidden; text-align:center;'>-->
+
+<script type="text/javascript" src='js/three.min.js'></script>
+<script src="js/OrbitControls.js"></script>
+<script src="Three.js/js/MarchingCubesData.js"></script>
+
 
 
 
 <script type="text/javascript">
-
-// MAIN
-
 function fxyz(){
     var myfun = document.getElementById("fun").value;
     
     function func(x,y,z){
         return eval(myfun);
-        
-        
     }
-    
     return func;
-    
 }
-
-
-
-// standard global variables
-var container, scene, camera, renderer, controls, stats;
-var keyboard = new THREEx.KeyboardState();
-var clock = new THREE.Clock();
-
-// custom global variables
-var mesh=[];
-var points = [];
-var values = [];
-var size;
-
 function refresh(){
     scene.remove(mesh);
     mesh = [];
     points = [];
     values = [];
-    
-}
-
-
-
-// FUNCTIONS 		
-//function init()
-//{
-	// SCENE
-	scene = new THREE.Scene();
-	// CAMERA
-	var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-    
-    //var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = 500;
-    
-    
-	var VIEW_ANGLE = 55, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
-	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
-	scene.add(camera);
-    
-    camera.up = new THREE.Vector3( 0, 0, 1 );
-    camera.position.set( 45, 30, 10 );
-	//camera.position.set(30,5,60);
-	//camera.position.set(0,150,400);
-    camera.lookAt(scene.position);
-	// RENDERER
-	if ( Detector.webgl )
-		renderer = new THREE.WebGLRenderer( {antialias:true} );
-	else
-		renderer = new THREE.CanvasRenderer();
-        
-    renderer.setClearColor( 0xffffff );
-    
-	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-	container = document.getElementById( 'ThreeJS' );
-	container.appendChild( renderer.domElement );
-	// EVENTS
-	THREEx.WindowResize(renderer, camera);
-	THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
-	// CONTROLS
-	controls = new THREE.OrbitControls( camera, renderer.domElement );
-	// STATS
-	stats = new Stats();
-	stats.domElement.style.position = 'absolute';
-	stats.domElement.style.bottom = '0px';
-	stats.domElement.style.zIndex = 100;
-	container.appendChild( stats.domElement );
-	// LIGHT
-	var light = new THREE.PointLight(0xffffff);
-	light.position.set(50,50,50);
-    scene.add(light);
+    }
+    //////////////////////////////////////////////////////////////////////////////////
+    //      Init
+    //////////////////////////////////////////////////////////////////////////////////
+    // init renderer
+    var renderer    = new THREE.WebGLRenderer({
+        antialias   : true
+    });
+    renderer.setClearColor(new THREE.Color('white'), 1)
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+    // array of functions for the rendering loop
+    var onRenderFcts= [];
+    var mesh=[];
+    var points = [];
+    var values = [];
+    var size;
+    // init scene and camera
+    var scene   = new THREE.Scene();
     axis = new THREE.AxisHelper(100);
-	scene.add(axis);
-    //scene.fog = new THREE.FogExp2( 0x888888, 0.0025 );
-    
-    // wireframe for xy-plane
-	var wireframeMaterial = new THREE.MeshBasicMaterial( { color: 'grey', wireframe: true, side:THREE.DoubleSide } );
-	var floorGeometry = new THREE.PlaneGeometry(100,100,10,10);
-	var floor = new THREE.Mesh(floorGeometry, wireframeMaterial);
-	floor.position.z = -0.01;
-    scene.add(floor);
-    
-    //var gridXY = new THREE.GridHelper(20, 20);
-    //gridXY.rotation.x = Math.PI/2;
-    //gridXY.position.set(5,5,0);
-    //scene.add(gridXY);
-    
-    
-    // add 3D text
-	
-
+    scene.add(axis);
+    var camera  = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20000);
+    camera.up = new THREE.Vector3( 0, 0, 1 );
+    camera.position.set( 45, 30, 20 );
+    //camera.position.z = 2;
+    var controls    = new THREE.OrbitControls(camera, renderer.domElement)
+    //////////////////////////////////////////////////////////////////////////////////
+    //      add an object in the scene
+    //////////////////////////////////////////////////////////////////////////////////
+    // add a torus  
+    //var geometry    = new THREE.TorusKnotGeometry(0.5-0.12, 0.12);
+    //var material    = new THREE.MeshNormalMaterial(); 
+    //var mesh    = new THREE.Mesh( geometry, material );
+    //scene.add( mesh );
+    //init()
     init();
     animate();
-
-
-
+    //////////////////////////////////////////////////////////////////////////////////
+    //      render the whole thing on the page
+    //////////////////////////////////////////////////////////////////////////////////
+    // handle window resize
+    window.addEventListener('resize', function(){
+        renderer.setSize( window.innerWidth, window.innerHeight )
+        camera.aspect   = window.innerWidth / window.innerHeight
+        camera.updateProjectionMatrix()     
+    }, false)
+    // render the scene
+    onRenderFcts.push(function(){
+        renderer.render(scene, camera);       
+    })
+    
+    // run the rendering loop
+    var lastTimeMsec= null
+    requestAnimationFrame(function animate(nowMsec){
+        // keep looping
+        requestAnimationFrame(animate);
+        // measure time
+        lastTimeMsec    = lastTimeMsec || nowMsec-1000/60
+        var deltaMsec   = Math.min(200, nowMsec-lastTimeMsec)
+        lastTimeMsec    = nowMsec
+        // call each update function
+        onRenderFcts.forEach(function(onRenderFct){
+            onRenderFct(deltaMsec/1000, nowMsec/1000)
+        })
+    })
 function init(){
-    
-    
-	// number of cubes along a side
-	size = 30;
-
-	var axisMin = -10;
-	var axisMax =  10;
-	var axisRange = axisMax - axisMin;
-	
-	// Generate a list of 3D points and values at those points
-	for (var k = 0; k < size; k++)
-	for (var j = 0; j < size; j++)
-	for (var i = 0; i < size; i++)
-	{
-		// actual values
-		var x = axisMin + axisRange * i / (size - 1);
-		var y = axisMin + axisRange * j / (size - 1);
-		var z = axisMin + axisRange * k / (size - 1);
-		points.push( new THREE.Vector3(x,y,z) );
+    // number of cubes along a side
+    size = 30;
+    var axisMin = -10;
+    var axisMax =  10;
+    var axisRange = axisMax - axisMin;
+    // Generate a list of 3D points and values at those points
+    for (var k = 0; k < size; k++)
+    for (var j = 0; j < size; j++)
+    for (var i = 0; i < size; i++)
+    {// actual values
+        var x = axisMin + axisRange * i / (size - 1);
+        var y = axisMin + axisRange * j / (size - 1);
+        var z = axisMin + axisRange * k / (size - 1);
+        points.push( new THREE.Vector3(x,y,z) );
+        //var value = Math.cos(x) + Math.cos(y) + Math.cos(z);
         var value = fxyz()(x,y,z);
-	    values.push( value );
-	}
+        values.push( value );
+    }
+    // Marching Cubes Algorithm
+    var size2 = size * size;
+    var vlist = new Array(12);
+    var geometry = new THREE.Geometry();
+    var vertexIndex = 0;
     
-    //GridHelper
+    for (var z = 0; z < size - 1; z++)
+    for (var y = 0; y < size - 1; y++)
+    for (var x = 0; x < size - 1; x++)
+    {
+        // index of base point, and also adjacent points on cube
+        var p    = x + size * y + size2 * z,
+            px   = p   + 1,
+            py   = p   + size,
+            pxy  = py  + 1,
+            pz   = p   + size2,
+            pxz  = px  + size2,
+            pyz  = py  + size2,
+            pxyz = pxy + size2;
+        
+        // store scalar values corresponding to vertices
+        var value0 = values[ p    ],
+            value1 = values[ px   ],
+            value2 = values[ py   ],
+            value3 = values[ pxy  ],
+            value4 = values[ pz   ],
+            value5 = values[ pxz  ],
+            value6 = values[ pyz  ],
+            value7 = values[ pxyz ];
+        
+        var isolevel = 0;
+        
+        var cubeindex = 0;
+        if ( value0 < isolevel ) cubeindex |= 1;
+        if ( value1 < isolevel ) cubeindex |= 2;
+        if ( value2 < isolevel ) cubeindex |= 8;
+        if ( value3 < isolevel ) cubeindex |= 4;
+        if ( value4 < isolevel ) cubeindex |= 16;
+        if ( value5 < isolevel ) cubeindex |= 32;
+        if ( value6 < isolevel ) cubeindex |= 128;
+        if ( value7 < isolevel ) cubeindex |= 64;
+        
+        // bits = 12 bit number, indicates which edges are crossed by the isosurface
+        var bits = THREE.edgeTable[ cubeindex ];
+        // if none are crossed, proceed to next iteration
+        if ( bits === 0 ) continue;
+        var mu = 0.5; 
+        // bottom of the cube
+        if ( bits & 1 )
+        {       
+            mu = ( isolevel - value0 ) / ( value1 - value0 );
+            vlist[0] = points[p].clone().lerp( points[px], mu );
+        }
+        if ( bits & 2 )
+        {
+            mu = ( isolevel - value1 ) / ( value3 - value1 );
+            vlist[1] = points[px].clone().lerp( points[pxy], mu );
+        }
+        if ( bits & 4 )
+        {
+            mu = ( isolevel - value2 ) / ( value3 - value2 );
+            vlist[2] = points[py].clone().lerp( points[pxy], mu );
+        }
+        if ( bits & 8 )
+        {
+            mu = ( isolevel - value0 ) / ( value2 - value0 );
+            vlist[3] = points[p].clone().lerp( points[py], mu );
+        }
+        // top of the cube
+        if ( bits & 16 )
+        {
+            mu = ( isolevel - value4 ) / ( value5 - value4 );
+            vlist[4] = points[pz].clone().lerp( points[pxz], mu );
+        }
+        if ( bits & 32 )
+        {
+            mu = ( isolevel - value5 ) / ( value7 - value5 );
+            vlist[5] = points[pxz].clone().lerp( points[pxyz], mu );
+        }
+        if ( bits & 64 )
+        {
+            mu = ( isolevel - value6 ) / ( value7 - value6 );
+            vlist[6] = points[pyz].clone().lerp( points[pxyz], mu );
+        }
+        if ( bits & 128 )
+        {
+            mu = ( isolevel - value4 ) / ( value6 - value4 );
+            vlist[7] = points[pz].clone().lerp( points[pyz], mu );
+        }
+        // vertical lines of the cube
+        if ( bits & 256 )
+        {
+            mu = ( isolevel - value0 ) / ( value4 - value0 );
+            vlist[8] = points[p].clone().lerp( points[pz], mu );
+        }
+        if ( bits & 512 )
+        {
+            mu = ( isolevel - value1 ) / ( value5 - value1 );
+            vlist[9] = points[px].clone().lerp( points[pxz], mu );
+        }
+        if ( bits & 1024 )
+        {
+            mu = ( isolevel - value3 ) / ( value7 - value3 );
+            vlist[10] = points[pxy].clone().lerp( points[pxyz], mu );
+        }
+        if ( bits & 2048 )
+        {
+            mu = ( isolevel - value2 ) / ( value6 - value2 );
+            vlist[11] = points[py].clone().lerp( points[pyz], mu );
+        }
+        
+        // construct triangles -- get correct vertices from triTable.
+        var i = 0;
+        cubeindex <<= 4;  // multiply by 16... 
+        while ( THREE.triTable[ cubeindex + i ] != -1 ) 
+        {
+            var index1 = THREE.triTable[cubeindex + i];
+            var index2 = THREE.triTable[cubeindex + i + 1];
+            var index3 = THREE.triTable[cubeindex + i + 2];
+            
+            geometry.vertices.push( vlist[index1].clone() );
+            geometry.vertices.push( vlist[index2].clone() );
+            geometry.vertices.push( vlist[index3].clone() );
+            var face = new THREE.Face3(vertexIndex, vertexIndex+1, vertexIndex+2);
+            geometry.faces.push( face );
+            geometry.faceVertexUvs[ 0 ].push( [ new THREE.Vector2(0,0), new THREE.Vector2(0,1), new THREE.Vector2(1,1) ] );
+            vertexIndex += 3;
+            i += 3;
+        }
+    }
     
-    //step = 1;
-    //var gridHelper = new THREE.GridHelper( size, step );
-    //gridHelper.rotation.x = Math.PI/2;
-    //scene.add(gridHelper);
-    
-	// Marching Cubes Algorithm
-	
-	var size2 = size * size;
-
-	// Vertices may occur along edges of cube, when the values at the edge's endpoints
-	//   straddle the isolevel value.
-	// Actual position along edge weighted according to function values.
-	var vlist = new Array(12);
-	
-	var geometry = new THREE.Geometry();
-	var vertexIndex = 0;
-	
-	for (var z = 0; z < size - 1; z++)
-	for (var y = 0; y < size - 1; y++)
-	for (var x = 0; x < size - 1; x++)
-	{
-		// index of base point, and also adjacent points on cube
-		var p    = x + size * y + size2 * z,
-			px   = p   + 1,
-			py   = p   + size,
-			pxy  = py  + 1,
-			pz   = p   + size2,
-			pxz  = px  + size2,
-			pyz  = py  + size2,
-			pxyz = pxy + size2;
-		
-		// store scalar values corresponding to vertices
-		var value0 = values[ p    ],
-			value1 = values[ px   ],
-			value2 = values[ py   ],
-			value3 = values[ pxy  ],
-			value4 = values[ pz   ],
-			value5 = values[ pxz  ],
-			value6 = values[ pyz  ],
-			value7 = values[ pxyz ];
-		
-		// place a "1" in bit positions corresponding to vertices whose
-		//   isovalue is less than given constant.
-		
-		var isolevel = 0;
-		
-		var cubeindex = 0;
-		if ( value0 < isolevel ) cubeindex |= 1;
-		if ( value1 < isolevel ) cubeindex |= 2;
-		if ( value2 < isolevel ) cubeindex |= 8;
-		if ( value3 < isolevel ) cubeindex |= 4;
-		if ( value4 < isolevel ) cubeindex |= 16;
-		if ( value5 < isolevel ) cubeindex |= 32;
-		if ( value6 < isolevel ) cubeindex |= 128;
-		if ( value7 < isolevel ) cubeindex |= 64;
-		
-		// bits = 12 bit number, indicates which edges are crossed by the isosurface
-		var bits = THREE.edgeTable[ cubeindex ];
-		
-		// if none are crossed, proceed to next iteration
-		if ( bits === 0 ) continue;
-		
-		// check which edges are crossed, and estimate the point location
-		//    using a weighted average of scalar values at edge endpoints.
-		// store the vertex in an array for use later.
-		var mu = 0.5; 
-		
-		// bottom of the cube
-		if ( bits & 1 )
-		{		
-			mu = ( isolevel - value0 ) / ( value1 - value0 );
-			vlist[0] = points[p].clone().lerp( points[px], mu );
-		}
-		if ( bits & 2 )
-		{
-			mu = ( isolevel - value1 ) / ( value3 - value1 );
-			vlist[1] = points[px].clone().lerp( points[pxy], mu );
-		}
-		if ( bits & 4 )
-		{
-			mu = ( isolevel - value2 ) / ( value3 - value2 );
-			vlist[2] = points[py].clone().lerp( points[pxy], mu );
-		}
-		if ( bits & 8 )
-		{
-			mu = ( isolevel - value0 ) / ( value2 - value0 );
-			vlist[3] = points[p].clone().lerp( points[py], mu );
-		}
-		// top of the cube
-		if ( bits & 16 )
-		{
-			mu = ( isolevel - value4 ) / ( value5 - value4 );
-			vlist[4] = points[pz].clone().lerp( points[pxz], mu );
-		}
-		if ( bits & 32 )
-		{
-			mu = ( isolevel - value5 ) / ( value7 - value5 );
-			vlist[5] = points[pxz].clone().lerp( points[pxyz], mu );
-		}
-		if ( bits & 64 )
-		{
-			mu = ( isolevel - value6 ) / ( value7 - value6 );
-			vlist[6] = points[pyz].clone().lerp( points[pxyz], mu );
-		}
-		if ( bits & 128 )
-		{
-			mu = ( isolevel - value4 ) / ( value6 - value4 );
-			vlist[7] = points[pz].clone().lerp( points[pyz], mu );
-		}
-		// vertical lines of the cube
-		if ( bits & 256 )
-		{
-			mu = ( isolevel - value0 ) / ( value4 - value0 );
-			vlist[8] = points[p].clone().lerp( points[pz], mu );
-		}
-		if ( bits & 512 )
-		{
-			mu = ( isolevel - value1 ) / ( value5 - value1 );
-			vlist[9] = points[px].clone().lerp( points[pxz], mu );
-		}
-		if ( bits & 1024 )
-		{
-			mu = ( isolevel - value3 ) / ( value7 - value3 );
-			vlist[10] = points[pxy].clone().lerp( points[pxyz], mu );
-		}
-		if ( bits & 2048 )
-		{
-			mu = ( isolevel - value2 ) / ( value6 - value2 );
-			vlist[11] = points[py].clone().lerp( points[pyz], mu );
-		}
-		
-		// construct triangles -- get correct vertices from triTable.
-		var i = 0;
-		cubeindex <<= 4;  // multiply by 16... 
-		// "Re-purpose cubeindex into an offset into triTable." 
-		//  since each row really isn't a row.
-		 
-		// the while loop should run at most 5 times,
-		//   since the 16th entry in each row is a -1.
-		while ( THREE.triTable[ cubeindex + i ] != -1 ) 
-		{
-			var index1 = THREE.triTable[cubeindex + i];
-			var index2 = THREE.triTable[cubeindex + i + 1];
-			var index3 = THREE.triTable[cubeindex + i + 2];
-			
-			geometry.vertices.push( vlist[index1].clone() );
-			geometry.vertices.push( vlist[index2].clone() );
-			geometry.vertices.push( vlist[index3].clone() );
-			var face = new THREE.Face3(vertexIndex, vertexIndex+1, vertexIndex+2);
-			geometry.faces.push( face );
-
-			geometry.faceVertexUvs[ 0 ].push( [ new THREE.Vector2(0,0), new THREE.Vector2(0,1), new THREE.Vector2(1,1) ] );
-
-			vertexIndex += 3;
-			i += 3;
-		}
-	}
-	
-	geometry.computeCentroids();
-	geometry.computeFaceNormals();
-	geometry.computeVertexNormals();
-    
-    
-
-
-	
-	//var colorMaterial =  new THREE.MeshLambertMaterial( {color:
-                                                //       0x0000ff , side: THREE.DoubleSide} );
-                                                       
-                                                       
-    //var colorMaterial = new THREE.MeshNormalMaterial( { overdraw: 0.5, side: THREE.DoubleSide } );
-    
+    //geometry.computeCentroids();
+    geometry.computeFaceNormals();
+    geometry.computeVertexNormals();
+    var material    = new THREE.MeshNormalMaterial(); 
     
     var materialLines = new THREE.MeshBasicMaterial( { color: 0x0000ff, wireframe: true, side: THREE.DoubleSide } );
-
-
     mesh = new THREE.Mesh( geometry, new THREE.MeshNormalMaterial( {overdraw: 0.5, side: THREE.DoubleSide} ));
-
-	scene.add(mesh);
+    scene.add(mesh);
 }
-
 function animate() 
 {
     requestAnimationFrame( animate );
-	render();		
-	update();
+    render();       
+    update();
 }
-
 function update()
 {
-	controls.update();
-	stats.update();
+    controls.update();
+    stats.update();
 }
-
 function render() 
 {
-	renderer.render( scene, camera );
+    renderer.render( scene, camera );
 }
-
-
-
 </script>
 
 
-<p style="font-size:10px; position:absolute; left:10px">Click and drag to move the graph, scroll to zoom the graph.
-<br>
-
-positive z-axis: blue line
-
-<br>
-
-positive x-axis: red line
-<br>
-
-positive y-axis: green line
-
-</p>
-
-
-<script>
-    function info(){
-        
-        alert("Mathematical functions and constants can be called by using Math as an object. For example, \n Math.E: the constant e,\n Math.PI: the constant Pi. \n Math.sin(x): function sin(x),\n Math.cos(x): function cos(x), \n Math.tan(x): function tan(x), \n Math.pow(a,b): a to the power of b,\n Math.log(x): log x of base e),\n Math.exp(x) (exponent of x), \n Math.abs(x): absolute value of x, \n Math.sqrt(x): square root of x.")
-        
-        
-    }
-</script>
 
 
 </body>
+
+
 </html>
-
-
